@@ -1,31 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 //import { Link } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
 import Button from "@mui/material/Button";
 
+import useFetch from './useFetch'
 import "./App.css";
 
 const ITEMS_PER_PAGE = 4;
 
 const App = () => {
-  const [data, setData] = useState([]);
   const [activePage, setActivePage] = useState(1);
   const [cardLayout, setCardLayout] = useState("list");
-  const [loading, setLoading] = useState(false);
+  
 
-  useEffect(() => {
-    setLoading(true)
-    const fetchData = async () => {
-      const response = await axios.get(
-        `https://swapi.dev/api/people/?page=${activePage}`
-      );
-      setLoading(false)
-      setData(response.data.results);
-      
-    };
+  const { data, loading, error } = useFetch(`https://swapi.dev/api/people/?page=${activePage}`)
 
-    fetchData();
-  }, [activePage]);
+ 
 
   const handlePageClick = (pageNumber) => {
     setActivePage(pageNumber);
@@ -111,7 +101,8 @@ const App = () => {
         </button>
       </div>
       {loading && <h1 className="loading__state">Loading...</h1>}
-      {!loading && renderCards()}
+      {error && !loading && <h1 className="loading__state">Error loading from API</h1>}
+      {!loading && !error && renderCards()}
       {renderPagination()}
     </div>
   );
