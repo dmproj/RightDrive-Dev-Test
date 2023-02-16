@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import axios from "axios";
+import Button from "@mui/material/Button";
+
 import "./App.css";
 
 const ITEMS_PER_PAGE = 4;
@@ -9,13 +11,17 @@ const App = () => {
   const [data, setData] = useState([]);
   const [activePage, setActivePage] = useState(1);
   const [cardLayout, setCardLayout] = useState("list");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true)
     const fetchData = async () => {
       const response = await axios.get(
         `https://swapi.dev/api/people/?page=${activePage}`
       );
+      setLoading(false)
       setData(response.data.results);
+      
     };
 
     fetchData();
@@ -70,20 +76,20 @@ const App = () => {
     return (
       <div className="pagination">
         {activePage > 1 && (
-          <Link
-            to={`/?page=${activePage - 1}`}
-            onClick={() => handlePageClick(activePage - 1)}
-          >
+          <Button variant="contained" onClick={() => handlePageClick(activePage - 1)}>
             Prev
-          </Link>
+          </Button>
         )}
-        <span>{activePage}</span>
-        <Link
-          to={`/?page=${activePage + 1}`}
-          onClick={() => handlePageClick(activePage + 1)}
+        <Button
+          variant="contained"
+          disabled
+          style={{ backgroundColor: "blue", color: "#fff" }}
         >
+          {activePage}
+        </Button>
+        <Button variant="contained" onClick={() => handlePageClick(activePage + 1)}>
           Next
-        </Link>
+        </Button>
       </div>
     );
   };
@@ -104,12 +110,11 @@ const App = () => {
           List View
         </button>
       </div>
-      {renderCards()}
+      {loading && <h1 className="loading__state">Loading...</h1>}
+      {!loading && renderCards()}
       {renderPagination()}
     </div>
   );
 };
-
-
 
 export default App;
