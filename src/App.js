@@ -1,24 +1,28 @@
-import React, { useState } from "react";
-//import { Link } from "react-router-dom";
-//import axios from "axios";
-import Button from "@mui/material/Button";
-
-import useFetch from './useFetch'
-import "./App.css";
+import React, { useState, useEffect } from 'react';
+import Button from '@mui/material/Button';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPeople, setActivePage } from './store/starWarsSlice';
+import './App.css';
 
 const ITEMS_PER_PAGE = 4;
 
 const App = () => {
-  const [activePage, setActivePage] = useState(1);
-  const [cardLayout, setCardLayout] = useState("list");
   
+  const [cardLayout, setCardLayout] = useState('list');
 
-  const { data, loading, error } = useFetch(`https://swapi.dev/api/people/?page=${activePage}`)
+  const dispatch = useDispatch();
 
- 
+  const activePage = useSelector((state) => state.people.activePage);
+  const data = useSelector((state) => state.people.data);
+  const loading = useSelector((state) => state.people.loading);
+  const error = useSelector((state) => state.people.error);
+
+  useEffect(() => {
+    dispatch(fetchPeople(activePage));
+  }, [dispatch, activePage]);
 
   const handlePageClick = (pageNumber) => {
-    setActivePage(pageNumber);
+    dispatch(setActivePage(pageNumber));
   };
 
   const handleLayoutChange = (layout) => {
@@ -33,7 +37,7 @@ const App = () => {
         break;
       }
       const item = data[index];
-      if (cardLayout === "grid") {
+      if (cardLayout === 'grid') {
         cards.push(
           <div key={item.name} className={`card ${cardLayout}`}>
             <div className="card-body">
@@ -43,7 +47,7 @@ const App = () => {
             </div>
           </div>
         );
-      } else if (cardLayout === "list") {
+      } else if (cardLayout === 'list') {
         cards.push(
           <li key={item.name} className={`card ${cardLayout}`}>
             <div className="card-body">
@@ -55,7 +59,7 @@ const App = () => {
         );
       }
     }
-    return cardLayout === "grid" ? (
+    return cardLayout === 'grid' ? (
       <div className={`card-container `}>{cards}</div>
     ) : (
       <ul className={`card list`}>{cards}</ul>
@@ -70,11 +74,7 @@ const App = () => {
             Prev
           </Button>
         )}
-        <Button
-          variant="contained"
-          disabled
-          style={{ backgroundColor: "blue", color: "#fff" }}
-        >
+        <Button variant="contained" disabled style={{ backgroundColor: 'blue', color: '#fff' }}>
           {activePage}
         </Button>
         <Button variant="contained" onClick={() => handlePageClick(activePage + 1)}>
