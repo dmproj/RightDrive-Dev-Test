@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/RightDrive-Dev-Test/static/css/main.52e6f81c.css",
+    "main.js": "/RightDrive-Dev-Test/static/js/main.ce185cfc.js",
+    "index.html": "/RightDrive-Dev-Test/index.html",
+    "main.52e6f81c.css.map": "/RightDrive-Dev-Test/static/css/main.52e6f81c.css.map",
+    "main.ce185cfc.js.map": "/RightDrive-Dev-Test/static/js/main.ce185cfc.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.52e6f81c.css",
+    "static/js/main.ce185cfc.js"
+  ]
+}
